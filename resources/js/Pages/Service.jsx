@@ -1,4 +1,7 @@
+import ServiceCard from "@/Components/Home/Card/ServiceCard";
+import RedirectButton from "@/Components/RedirectButton";
 import GuestLayout from "@/Layouts/GuestLayout";
+import dataStore from "@/Store/data";
 import { Head } from "@inertiajs/react";
 import React from "react";
 import { FaCut, FaShower, FaMale, FaPaw } from "react-icons/fa"; // Contoh ikon dari react-icons
@@ -26,63 +29,24 @@ const ServicePage = () => {
                     <h2 className="text-3xl font-semibold text-center text-brown mb-12">
                         Layanan Kami
                     </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                        {/* Layanan 1: Potong Rambut */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-                            <FaCut className="text-4xl text-brown mb-4 mx-auto" />
-                            <h3 className="text-xl font-semibold text-brown mb-2">
-                                Potong Rambut
-                            </h3>
-                            <p className="text-gray-600 mb-4">
-                                Potongan rambut sesuai dengan gaya Anda,
-                                dilakukan oleh barber berpengalaman.
-                            </p>
-                            <p className="text-brown font-semibold">
-                                Rp. 100.000
-                            </p>
-                        </div>
-                        {/* Layanan 2: Cukur Jenggot */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-                            <FaMale className="text-4xl text-brown mb-4 mx-auto" />
-                            <h3 className="text-xl font-semibold text-brown mb-2">
-                                Cukur Jenggot
-                            </h3>
-                            <p className="text-gray-600 mb-4">
-                                Layanan cukur jenggot yang rapi dan nyaman,
-                                memberikan penampilan maksimal.
-                            </p>
-                            <p className="text-brown font-semibold">
-                                Rp. 50.000
-                            </p>
-                        </div>
-                        {/* Layanan 3: Cuci Rambut */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-                            <FaShower className="text-4xl text-brown mb-4 mx-auto" />
-                            <h3 className="text-xl font-semibold text-brown mb-2">
-                                Cuci Rambut
-                            </h3>
-                            <p className="text-gray-600 mb-4">
-                                Cuci rambut dengan produk berkualitas tinggi
-                                untuk kenyamanan Anda.
-                            </p>
-                            <p className="text-brown font-semibold">
-                                Rp. 30.000
-                            </p>
-                        </div>
-                        {/* Layanan 4: Grooming Hewan Peliharaan */}
-                        <div className="bg-white p-6 rounded-lg shadow-lg text-center hover:shadow-xl transition-shadow duration-300">
-                            <FaPaw className="text-4xl text-brown mb-4 mx-auto" />
-                            <h3 className="text-xl font-semibold text-brown mb-2">
-                                Grooming Hewan
-                            </h3>
-                            <p className="text-gray-600 mb-4">
-                                Layanan grooming untuk hewan peliharaan Anda,
-                                agar tetap sehat dan terawat.
-                            </p>
-                            <p className="text-brown font-semibold">
-                                Rp. 150.000
-                            </p>
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 px-4">
+                        {dataStore.services.map((service) => (
+                            <ServiceCard
+                                key={service.title}
+                                icon={service.icon}
+                                title={service.title}
+                                description={service.description}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="flex justify-center items-center p-2 mt-4">
+                        <RedirectButton
+                            href={route("booking.create")}
+                            className=" bg-brown"
+                        >
+                            BOOKING SEKARANG
+                        </RedirectButton>
                     </div>
                 </div>
             </section>

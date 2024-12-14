@@ -9,7 +9,7 @@ class Booking extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_name', 'date', 'service_id', 'schedule_id', 'status'];
+    protected $fillable = ['customer_name', 'date', 'email', 'service_id', 'schedule_id', 'status'];
 
     // Relationship: A booking belongs to a service and a schedule
     public function service()

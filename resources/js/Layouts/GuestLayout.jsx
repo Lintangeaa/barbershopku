@@ -47,6 +47,12 @@ export default function GuestLayout({ header, children }) {
                                 >
                                     Contact
                                 </NavLink>
+                                <NavLink
+                                    href={route("L")}
+                                    active={route().current("contact")}
+                                >
+                                    Contact
+                                </NavLink>
                                 <div className="flex justify-center items-center p-2">
                                     <RedirectButton
                                         href={route("booking.create")}

@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('customer_name');
             $table->date('date'); // booking date
+            $table->string('email');
             $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->foreignId('schedule_id')->constrained()->onDelete('cascade');
             $table->enum('status', [1, 2, 3]); // 1 = Pending, 2 = Confirmed, 3 = Completed

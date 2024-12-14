@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CustomerController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,7 +31,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('/booking/create', [BookingController::class, 'create'])->name('booking.create');
-Route::post('/booking', [BookingController::class, 'store'])->name('booking.store');
+Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
+
+Route::get('/payment/{id}', [CustomerController::class, 'getPayment'])->name('payment.get');
+Route::post('/payment/submit/{id}', [CustomerController::class, 'submitProof'])->name('payment.submit');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
