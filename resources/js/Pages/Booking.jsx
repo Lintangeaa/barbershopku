@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "@inertiajs/react"; // Inertia.js form handling
+import { Head, useForm } from "@inertiajs/react"; // Inertia.js form handling
 import PrimaryButton from "@/Components/PrimaryButton";
 import GuestLayout from "@/Layouts/GuestLayout";
 import Swal from "sweetalert2";
@@ -61,6 +61,7 @@ export default function CreateBooking({ services, schedules, bookings }) {
 
     return (
         <GuestLayout>
+            <Head title="Booking" />
             <div className="max-w-4xl mx-auto py-12">
                 <h1 className="text-3xl font-semibold text-center mb-8">
                     Booking Layanan
@@ -200,10 +201,10 @@ export default function CreateBooking({ services, schedules, bookings }) {
                         )}
                     </div>
 
-                    <div className="text-center">
+                    <div className="flex justify-center">
                         <PrimaryButton
                             type="submit"
-                            className="w-full bg-brown"
+                            className="text-center bg-brown"
                             disabled={processing}
                         >
                             {processing ? "Memproses..." : "Buat Booking"}

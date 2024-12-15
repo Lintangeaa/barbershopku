@@ -11,14 +11,24 @@ class CustomerController extends Controller
 {
     public function getPayment($id)
     {
+        // Find the booking with related service and schedule
         $booking = Booking::with(['service', 'schedule'])->find($id);
-
+        
+        // Check if a payment proof exists for the booking
+        $paymentProof = PaymentProof::where('booking_id', $id)->first();
+        
+        // Set isPay flag
+        $isPay = $paymentProof ? true : false;
+        
+        // If booking doesn't exist, return 404
         if (!$booking) {
             abort(404, 'Booking tidak ditemukan');
         }
-
+    
+        // Return the data for the 'Payment' page
         return inertia('Payment', [
-            'booking' => $booking
+            'booking' => $booking,
+            'isPay' => $isPay,
         ]);
     }
 

@@ -9,21 +9,21 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
+use App\Models\PaymentProof;
 
 class BookingController extends Controller
 {
     public function index()
     {
-        // Mengambil data services dan schedules dari database
-        $services = Service::all();
-        $schedules = Schedule::where('status', false)->get(); 
-
-        // Mengirimkan data ke halaman React menggunakan Inertia
+        // Mengambil data bookings dengan relasi ke service, schedule, dan paymentProof
+        $bookings = Booking::with(['service', 'schedule', 'paymentProof'])->orderBy('date', 'asc')->get(); 
+    
+        // Kirimkan data ke halaman React menggunakan Inertia
         return Inertia::render('Admin/Booking/Index', [
-            'services' => $services,
-            'schedules' => $schedules,
+            'bookings' => $bookings, // Hanya mengirim data bookings
         ]);
     }
+    
 
     public function create()
     {
