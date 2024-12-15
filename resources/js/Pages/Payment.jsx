@@ -104,6 +104,8 @@ const Payment = ({ booking, isPay }) => {
         }
     };
 
+    console.log(isPay);
+
     return (
         <GuestLayout header={"Pembayaran"}>
             <Head title="Pembayaran" />

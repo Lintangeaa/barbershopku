@@ -42,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
+    Route::patch('/payment/confirm/{id}', [BookingController::class, 'confirmPayment'])->name('payment.confirm');
+    Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
 });
 

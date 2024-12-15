@@ -101,4 +101,47 @@ class BookingController extends Controller
             return back();
         }        
     }
+
+    public function confirmPayment($bookingId)
+    {
+        $booking = Booking::with(['service', 'schedule'])->find($bookingId);
+
+        $booking->status = 2;
+        $booking->save();
+
+        $customerName = $booking->customer_name;
+        $customerEmail = $booking->email;
+        $serviceName = $booking->service->name;
+        $bookingDate = $booking->date;
+        $scheduleTime = $booking->schedule->time_range;
+        $bookingId = $booking->id;
+
+        $emailBody = "Halo {$customerName},\n\n" .
+            "Pembayaran Anda telah dikonfirmasi! Berikut adalah detail booking Anda:\n\n" .
+            "Nomor Antrian: {$bookingId}\n" .
+            "Tanggal: {$bookingDate}\n" .
+            "Jadwal: {$scheduleTime}\n" .
+            "Layanan: {$serviceName}\n\n" .
+            "Terima kasih telah memilih layanan kami. Sampai jumpa di barbershop!";
+
+        $client = new Client();
+        $response = $client->post('https://siupik-api.my.id/api/service/sendemail', [
+            'json' => [
+                'email' => 'devsoulcode0@gmail.com',
+                'password' => 'ulxe usvm imlw ijfm',
+                'to' => $customerEmail,
+                'subject' => 'Konfirmasi Pembayaran - Booking Barbershop',
+                'text' => $emailBody
+            ]
+        ]);
+    }
+
+    public function destroy($bookingId)
+    {
+        $booking = Booking::findOrFail($bookingId);
+        // Hapus data
+        $booking->delete();
+
+        return redirect()->route('booking.index');
+    }
 }

@@ -1,13 +1,20 @@
 import React, { useState } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { RiDeleteBin2Line, RiEdit2Line } from "react-icons/ri";
 import { MdPreview } from "react-icons/md";
+import Modal from "@/Components/Modal";
+import Swal from "sweetalert2";
+import PrimaryButton from "@/Components/PrimaryButton";
 
-const BookingIndex = ({ bookings }) => {
+const BookingIndex = ({ bookings: initialBookings }) => {
+    const [bookings, setBookings] = useState(initialBookings);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
 
+    const { patch, delete: destroy } = useForm();
+
+    // Open the modal with the selected image
     const openModal = (imageUrl) => {
         setSelectedImage(imageUrl);
         setModalOpen(true);
@@ -16,6 +23,74 @@ const BookingIndex = ({ bookings }) => {
     const closeModal = () => {
         setModalOpen(false);
         setSelectedImage(null);
+    };
+
+    // Confirm payment and update status dynamically
+    const confirmPayment = (bookingId) => {
+        patch(route("payment.confirm", bookingId), {
+            onSuccess: (response) => {
+                Swal.fire({
+                    icon: "success",
+                    title: "Berhasil!",
+                    text: response.message || "Booking berhasil dikonfirmasi!",
+                });
+                setBookings((prevBookings) =>
+                    prevBookings.map((b) =>
+                        b.id === bookingId ? { ...b, status: 2 } : b
+                    )
+                );
+
+                window.location.reload();
+            },
+
+            onError: (error) => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Gagal!",
+                    text:
+                        error.message ||
+                        "Terjadi kesalahan saat konfirmasi pembayaran.",
+                });
+            },
+        });
+    };
+
+    const deleteBooking = (bookingId) => {
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Booking ini akan dihapus secara permanen.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Ya, Hapus!",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                destroy(route("booking.destroy", bookingId), {
+                    onSuccess: () => {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Berhasil!",
+                            text: "Booking berhasil dihapus!",
+                        });
+                        setBookings(
+                            (prevBookings) =>
+                                prevBookings.filter((b) => b.id !== bookingId) // Hapus dari state
+                        );
+                    },
+                    onError: (error) => {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Gagal!",
+                            text:
+                                error.message ||
+                                "Terjadi kesalahan saat mencoba menghapus booking.",
+                        });
+                    },
+                });
+            }
+        });
     };
 
     return (
@@ -89,22 +164,21 @@ const BookingIndex = ({ bookings }) => {
                                                 Pending
                                             </span>
                                         )}
-                                        {booking.status == 2 && (
+                                        {booking.status === 2 && (
                                             <span className="text-blue-500 font-semibold">
-                                                Di ACC
+                                                Dikonfirmasi
                                             </span>
                                         )}
-                                        {booking.status == 3 && (
+                                        {booking.status === 3 && (
                                             <span className="text-green-500 font-semibold">
                                                 Selesai
                                             </span>
                                         )}
                                     </td>
-
                                     <td className="border px-6 py-4">
                                         {booking.payment_proof ? (
                                             <div className="flex space-x-2 items-center">
-                                                <span className="text-green-500 font-semibold">
+                                                <span className="text-green-500 font-semibold bg-green-200 border border-green-500 p-1 text-xs rounded">
                                                     Sudah Dibayar
                                                 </span>
                                                 <button
@@ -116,55 +190,60 @@ const BookingIndex = ({ bookings }) => {
                                                         )
                                                     }
                                                     className="text-blue-500 hover:text-blue-700"
-                                                    title="Preview"
+                                                    title="Lihat Bukti Pembayaran"
+                                                    aria-label="Lihat Bukti Pembayaran"
                                                 >
                                                     <MdPreview size={20} />
                                                 </button>
                                             </div>
                                         ) : (
-                                            <span className="text-red-500 font-semibold">
+                                            <span className="text-red-500 font-semibold bg-red-200 border-red-500">
                                                 Belum Dibayar
                                             </span>
                                         )}
                                     </td>
-                                    <td className="border px-6 py-4 text-center space-x-4">
-                                        <button
-                                            className="text-blue-500 hover:text-blue-700"
-                                            title="Edit"
-                                        >
-                                            <RiEdit2Line size={20} />
-                                        </button>
-                                        <button
-                                            className="text-red-500 hover:text-red-700"
-                                            title="Delete"
-                                        >
-                                            <RiDeleteBin2Line size={20} />
-                                        </button>
+                                    <td className="border flex px-6 py-4 text-center space-x-4">
+                                        {booking.status == 1 && (
+                                            <button
+                                                onClick={() =>
+                                                    confirmPayment(booking.id)
+                                                }
+                                                className="text-green-500 hover:text-green-700"
+                                                title="Konfirmasi Pembayaran"
+                                                aria-label="Konfirmasi Pembayaran"
+                                            >
+                                                Konfirmasi
+                                            </button>
+                                        )}
+
+                                        <RiDeleteBin2Line
+                                            className="text-red-500 hover:text-red-700 cursor-pointer"
+                                            size={20}
+                                            onClick={() =>
+                                                deleteBooking(booking)
+                                            }
+                                        />
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-
-                {/* Modal for displaying the proof image */}
-                {modalOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-                        <div className="bg-white p-5 rounded-lg shadow-lg relative">
-                            <button
-                                onClick={closeModal}
-                                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                            >
-                                ✕
-                            </button>
-                            <img
-                                src={"/storage/" + selectedImage}
-                                alt="Proof Image"
-                                className="max-w-full h-auto rounded-lg"
-                            />
+                <Modal show={modalOpen} onClose={closeModal}>
+                    {selectedImage ? (
+                        <div className="flex justify-center items-center p-4 bg-black/20">
+                            <div>
+                                <img
+                                    src={"/storage/" + selectedImage}
+                                    alt="Bukti Pembayaran"
+                                    className="max-w-full max-h-[80vh] rounded-lg shadow-lg"
+                                />
+                            </div>
                         </div>
-                    </div>
-                )}
+                    ) : (
+                        <p className="text-center">Gambar tidak ditemukan.</p>
+                    )}
+                </Modal>
             </div>
         </AuthenticatedLayout>
     );
