@@ -158,7 +158,7 @@ const BookingIndex = ({ bookings }) => {
                                 ✕
                             </button>
                             <img
-                                src={selectedImage}
+                                src={"/storage/" + selectedImage}
                                 alt="Proof Image"
                                 className="max-w-full h-auto rounded-lg"
                             />
