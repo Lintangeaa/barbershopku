@@ -77,7 +77,7 @@ const Slider = () => {
                             </h2>
                             <p className="mt-2 text-lg">{slide.description}</p>
                             <div className="mt-2">
-                                <RedirectButton href={"/"} className="bg-brown">
+                                <RedirectButton href={route('booking.create')} className="bg-brown">
                                     Booking Sekarang
                                 </RedirectButton>
                             </div>

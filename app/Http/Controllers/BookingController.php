@@ -3,61 +3,61 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Cutter;
 use Inertia\Inertia;
 use App\Models\Schedule;
 use App\Models\Service;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use GuzzleHttp\Client;
-use App\Models\PaymentProof;
+use Illuminate\Support\Facades\Log;
 
 class BookingController extends Controller
 {
     public function index()
     {
-        // Mengambil data bookings dengan relasi ke service, schedule, dan paymentProof
-        $bookings = Booking::with(['service', 'schedule', 'paymentProof'])->orderBy('date', 'asc')->get(); 
+        $bookings = Booking::with(['service', 'schedule', 'cutter', 'paymentProof'])->orderBy('date', 'asc')->get(); 
     
-        // Kirimkan data ke halaman React menggunakan Inertia
         return Inertia::render('Admin/Booking/Index', [
-            'bookings' => $bookings, // Hanya mengirim data bookings
+            'bookings' => $bookings,
         ]);
     }
     
 
     public function create()
     {
-        $services = Service::all(); // Ambil semua layanan
+        $services = Service::all();
         $schedules = Schedule::all();
         $bookings = Booking::all();
+        $cutters = Cutter::all();
 
         return Inertia::render('Booking', [
             'bookings' => $bookings,
             'services' => $services,
             'schedules' => $schedules,
+            'cutters' => $cutters
         ]);
     }
 
     public function store(Request $request)
     {
         try {
-            // Validasi input
             $request->validate([
                 'customer_name' => 'required|string|max:255',
                 'date' => 'required|date',
                 'email' => 'required|email|max:255',
                 'service_id' => 'required|exists:services,id',
                 'schedule_id' => 'required|exists:schedules,id',
+                'cutter_id' => 'required|exists:cutters,id'
             ]);
-        
-            // Create booking
+
             $booking = Booking::create([
                 'customer_name' => $request->customer_name,
                 'date' => $request->date,
                 'email' => $request->email,
                 'service_id' => $request->service_id,
                 'schedule_id' => $request->schedule_id,
-                'status' => 1, // Default status "Pending"
+                'cutter_id' => $request->cutter_id,
+                'status' => 1,
             ]);
         
             // Update schedule status
@@ -65,12 +65,12 @@ class BookingController extends Controller
             $service = Service::find($request->service_id);
         
             if ($schedule && $service) {
-                \Log::info('Schedule Found:', ['schedule_id' => $schedule->id, 'status' => $schedule->status]);
+                Log::info('Schedule Found:', ['schedule_id' => $schedule->id, 'status' => $schedule->status]);
         
                 $schedule->status = true;
                 $schedule->save();
             } else {
-                \Log::warning('Schedule Not Found:', ['schedule_id' => $request->schedule_id]);
+                Log::warning('Schedule Not Found:', ['schedule_id' => $request->schedule_id]);
             }
         
             // Generate payment link
@@ -88,14 +88,11 @@ class BookingController extends Controller
                 ]
             ]);
         
-            // Log the response
-            \Log::info('Email API Response:', ['response' => $response->getBody()->getContents()]);
+            Log::info('Email API Response:', ['response' => $response->getBody()->getContents()]);
         
-            // Set success flash message
             session()->flash('success', 'Booking berhasil!');
         } catch (\Exception $e) {
-            // Log error
-            \Log::error('Booking Error: ' . $e->getMessage());
+            Log::error('Booking Error: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan saat menyimpan booking.');
         
             return back();

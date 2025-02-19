@@ -6,15 +6,15 @@ import OurService from "@/Components/Home/Service";
 import OurBarbers from "@/Components/Home/Barbers";
 import Footer from "@/Components/Home/Footer";
 
-export default function Welcome() {
+export default function Welcome({cutters, services}) {
     return (
         <GuestLayout>
             <Head title="Barbershop" />
             <Slider />
             <About />
             <div className="bg-white h-2 shadow-2xl"></div>
-            <OurService />
-            <OurBarbers />
+            <OurService services={services}/>
+            <OurBarbers cutters={cutters} />
             <Footer />
         </GuestLayout>
     );

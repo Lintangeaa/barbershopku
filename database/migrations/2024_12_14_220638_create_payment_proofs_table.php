@@ -11,7 +11,7 @@ class CreatePaymentProofsTable extends Migration
         Schema::create('payment_proofs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
-            $table->text('proof_image'); // Simpan gambar dalam bentuk base64
+            $table->text('proof_image');
             $table->timestamps();
         });
     }

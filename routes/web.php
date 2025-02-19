@@ -1,18 +1,16 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CutterController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-})->name('home');
+Route::get('/', [ContentController::class, 'home'])->name('home');
 
 Route::get('/about', function () {
     return Inertia::render('About');
@@ -45,6 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/payment/confirm/{id}', [BookingController::class, 'confirmPayment'])->name('payment.confirm');
     Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
+    Route::resource('cutters', CutterController::class);
+    Route::resource('services', ServiceController::class);
 });
 
 require __DIR__ . '/auth.php';

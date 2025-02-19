@@ -12,7 +12,7 @@ export default function AuthenticatedLayout({ header, children }) {
         useState(false);
 
     return (
-        <div className="min-h-screen ">
+        <div className="min-h-screen bg-slate-50">
             <nav className="border-b border-gray-100 bg-neutral-800">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
@@ -29,6 +29,18 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current("dashboard")}
                                 >
                                     Dashboard
+                                </NavLink>
+                                <NavLink
+                                    href={route("cutters.index")}
+                                    active={["cutters.index", "cutters.create", "cutters.edit"].includes(route().current())}
+                                >
+                                    Cutters
+                                </NavLink>
+                                <NavLink
+                                    href={route("services.index")}
+                                    active={["services.index", "services.create", "services.edit"].includes(route().current())}
+                                >
+                                    Layanan
                                 </NavLink>
                                 <NavLink
                                     href={route("booking.index")}

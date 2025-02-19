@@ -4,10 +4,9 @@ import ServiceCard from "./Card/ServiceCard";
 import RedirectButton from "../RedirectButton";
 import dataStore from "@/Store/data";
 
-const LayananKami = () => {
+const LayananKami = ({services}) => {
     return (
         <section className="min-h-[80vh] bg-cream px-20 py-16">
-            {/* Judul Layanan */}
             <div className="text-center mb-12">
                 <h2 className="text-3xl sm:text-4xl font-bold text-brown mb-4">
                     Layanan Kami
@@ -20,11 +19,11 @@ const LayananKami = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-6 px-4">
-                {dataStore.services.map((service) => (
+                {services.map((service) => (
                     <ServiceCard
-                        key={service.title} // Menggunakan properti unik, seperti 'title' atau 'id'
-                        icon={service.icon}
-                        title={service.title}
+                        key={service.title} 
+                        image={service.image}
+                        name={service.name}
                         description={service.description}
                     />
                 ))}

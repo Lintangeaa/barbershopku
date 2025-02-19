@@ -1,17 +1,19 @@
 import React from "react";
-import { FaCut, FaPaintBrush, FaRegSmile, FaHeadset } from "react-icons/fa";
 
-const ServiceCard = ({ icon, title, description }) => {
+const ServiceCard = ({ image, name, description }) => {
+    console.log(name, description)
     return (
         <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer">
             <div className="flex justify-center">
-                <div className="text-5xl text-center text-brown mb-4">
-                    {icon}
-                </div>
+                <img
+                    src={`/storage/${image}`}
+                    alt={name}
+                    className="w-full h-48 object-cover rounded-md mb-4"
+                />
             </div>
 
             <h3 className="text-xl font-semibold text-center text-brown mb-2">
-                {title}
+                {name}
             </h3>
 
             <p className="text-center text-sm sm:text-base text-gray-600">
