@@ -111,13 +111,13 @@ const Payment = ({ booking, isPay }) => {
             <Head title="Pembayaran" />
 
             {!isPay ? (
-                <div className="max-w-4xl mx-auto py-12">
+                <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                     <h1 className="text-3xl font-semibold text-center mb-8">
                         Detail Pembayaran Booking
                     </h1>
 
                     <div className="bg-white p-6 rounded-lg shadow-md">
-                        <table className="table-auto w-full border-collapse">
+                        <table className="table-auto w-full border-collapse overflow-x-auto">
                             <tbody>
                                 <tr>
                                     <td className="border px-4 py-2 font-semibold text-gray-600">
@@ -204,7 +204,7 @@ const Payment = ({ booking, isPay }) => {
 
             {/* Modal for Payment Upload */}
             <Modal show={isOpen} onClose={() => setIsOpen(false)}>
-                <div className="max-w-4xl mx-auto py-12">
+                <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                     <h1 className="text-3xl font-semibold text-center mb-8">
                         Pembayaran
                     </h1>

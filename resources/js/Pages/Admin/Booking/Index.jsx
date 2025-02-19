@@ -12,6 +12,8 @@ const BookingIndex = ({ bookings: initialBookings }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
 
+    console.log(bookings)
+
     const { patch, delete: destroy } = useForm();
 
     const openModal = (imageUrl) => {
@@ -120,7 +122,7 @@ const BookingIndex = ({ bookings: initialBookings }) => {
                                     </td>
                                     <td className="border px-6 py-4 text-center">
                                         <div className="flex items-center justify-center space-x-4">
-                                            {booking.payment_proof === 2 && (
+                                            {booking.payment_proof && booking.status !== 2 && (
                                                 <PrimaryButton
                                                     className="bg-green-500 hover:bg-green-700"
                                                     onClick={() => confirmPayment(booking.id)}
