@@ -77,6 +77,7 @@ export default function CreateBooking({ services, schedules, cutters, bookings }
                             value={data.customer_name}
                             onChange={(e) => setData("customer_name", e.target.value)}
                             className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+                            required
                         />
                         {errors.customer_name && <div className="text-red-600 text-sm mt-1">{errors.customer_name}</div>}
                     </div>
@@ -90,6 +91,7 @@ export default function CreateBooking({ services, schedules, cutters, bookings }
                             value={data.email}
                             onChange={(e) => setData("email", e.target.value)}
                             className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+                            reaquired
                         />
                         {errors.email && <div className="text-red-600 text-sm mt-1">{errors.email}</div>}
                     </div>
@@ -104,6 +106,7 @@ export default function CreateBooking({ services, schedules, cutters, bookings }
                             onChange={handleDateChange}
                             min={new Date().toISOString().split("T")[0]}
                             className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+                            required
                         />
                         {errors.date && <div className="text-red-600 text-sm mt-1">{errors.date}</div>}
                     </div>
@@ -138,6 +141,7 @@ export default function CreateBooking({ services, schedules, cutters, bookings }
                             value={data.service_id}
                             onChange={(e) => setData("service_id", e.target.value)}
                             className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+                            required
                         >
                             <option value="">Pilih Layanan</option>
                             {services.map((service) => (
@@ -156,6 +160,7 @@ export default function CreateBooking({ services, schedules, cutters, bookings }
                             value={data.cutter_id}
                             onChange={(e) => setData("cutter_id", e.target.value)}
                             className="mt-1 block w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-500"
+                            required
                         >
                             <option value="">Pilih Cutter</option>
                             {cutters.map((cutter) => (
