@@ -238,7 +238,7 @@ const BookingIndex = ({ bookings: initialBookings }) => {
                             />
                         </div>
                     ) : (
-                        <p className="text-center">Gambar tidak ditemukan.</p>
+                        <p className="text-center">Gambar tidak ditemukan</p>
                     )}
                 </Modal>
             </div>
