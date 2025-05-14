@@ -74,7 +74,7 @@ class BookingController extends Controller
             }
         
             // Generate payment link
-            $paymentLink = "https://barbershopku.site/payment/{$booking->id}";
+            $paymentLink = "https://barbershopku.online/payment/{$booking->id}";
         
             // Send email
             $client = new Client();
