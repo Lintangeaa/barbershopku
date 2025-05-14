@@ -78,7 +78,7 @@ class BookingController extends Controller
         
             // Send email
             $client = new Client();
-            $response = $client->post('https://siupik-api.my.id/api/service/sendemail', [
+            $response = $client->post('http://103.87.67.71:7001/email/send', [
                 'json' => [
                     'email' => 'devsoulcode0@gmail.com',
                     'password' => 'ulxe usvm imlw ijfm',
@@ -122,7 +122,7 @@ class BookingController extends Controller
             "Terima kasih telah memilih layanan kami. Sampai jumpa di barbershop!";
 
         $client = new Client();
-        $response = $client->post('https://siupik-api.my.id/api/service/sendemail', [
+        $response = $client->post('http://103.87.67.71:7001/email/send', [
             'json' => [
                 'email' => 'devsoulcode0@gmail.com',
                 'password' => 'ulxe usvm imlw ijfm',
