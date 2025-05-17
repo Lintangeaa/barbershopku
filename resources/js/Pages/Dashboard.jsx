@@ -1,5 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage, router } from "@inertiajs/react";
+import { useState } from "react";
 import { FaUserTie, FaConciergeBell, FaChartBar } from "react-icons/fa";
 import {
     ResponsiveContainer,
@@ -11,7 +12,25 @@ import {
     Bar,
 } from "recharts";
 
-export default function Dashboard({ cutters, services, bookings }) {
+export default function Dashboard({
+    cutters,
+    services,
+    bookings,
+    selectedYear,
+    years,
+}) {
+    const [year, setYear] = useState(selectedYear);
+
+    const handleYearChange = (e) => {
+        const newYear = e.target.value;
+        setYear(newYear);
+        router.get(
+            route("dashboard"),
+            { year: newYear },
+            { preserveScroll: true }
+        );
+    };
+
     return (
         <AuthenticatedLayout
             header={
@@ -24,6 +43,24 @@ export default function Dashboard({ cutters, services, bookings }) {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-6">
+                    {/* Year Selector */}
+                    <div className="flex justify-end items-center">
+                        <label className="mr-2 font-medium text-gray-700">
+                            Tahun:
+                        </label>
+                        <select
+                            value={year}
+                            onChange={handleYearChange}
+                            className="border rounded px-3 py-1 text-sm w-20"
+                        >
+                            {years.map((yr) => (
+                                <option key={yr} value={yr}>
+                                    {yr}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
                     {/* Stat Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <Link
@@ -85,7 +122,7 @@ export default function Dashboard({ cutters, services, bookings }) {
                     <div className="bg-white shadow rounded-lg p-6">
                         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
                             <FaChartBar className="mr-2 text-orange-500" />
-                            Booking
+                            Booking Tahun {year}
                         </h3>
 
                         {bookings.length === 0 ? (
