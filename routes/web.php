@@ -5,6 +5,7 @@ use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CutterController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,9 +25,10 @@ Route::get('/contact', function () {
     return Inertia::render('Contact');
 })->name('contact');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::get('/booking/create', [BookingController::class, 'create'])->name('booking.create');
 Route::post('/booking/store', [BookingController::class, 'store'])->name('booking.store');
