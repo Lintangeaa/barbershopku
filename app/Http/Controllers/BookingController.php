@@ -80,8 +80,8 @@ class BookingController extends Controller
             $client = new Client();
             $response = $client->post('http://103.87.67.71:7001/email/send', [
                 'json' => [
-                    'email' => 'devsoulcode0@gmail.com',
-                    'password' => 'ulxe usvm imlw ijfm',
+                    'email' => env('MAIL_USERNAME'),
+                    'password' => env('MAIL_PASSWORD'),
                     'to' => $request->email,
                     'subject' => 'BOOKING BARBERSHOP',
                     'text' => "Halo {$request->customer_name},\n\nBooking Anda telah diterima. Terima kasih telah memilih layanan {$service->name}. Pada tanggal {$request->date} jam {$schedule->time_range}.\n\nSilakan lakukan pembayaran melalui tautan berikut:\n{$paymentLink}\n\nMohon lakukan pembayaran dalam waktu 2 jam. Jika pembayaran tidak diterima dalam waktu tersebut, booking Anda akan dibatalkan secara otomatis."
@@ -124,8 +124,8 @@ class BookingController extends Controller
         $client = new Client();
         $response = $client->post('http://103.87.67.71:7001/email/send', [
             'json' => [
-                'email' => 'devsoulcode0@gmail.com',
-                'password' => 'ulxe usvm imlw ijfm',
+                'email' => env('MAIL_USERNAME'),
+                'password' => env('MAIL_PASSWORD'),
                 'to' => $customerEmail,
                 'subject' => 'Konfirmasi Pembayaran - Booking Barbershop',
                 'text' => $emailBody
