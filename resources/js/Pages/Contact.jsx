@@ -1,6 +1,8 @@
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head } from "@inertiajs/react";
 import React, { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const ContactPage = () => {
     const [formData, setFormData] = useState({
@@ -18,44 +20,61 @@ const ContactPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Logic untuk mengirim pesan kontak (misalnya menggunakan API)
-        alert("Pesan terkirim!");
-        setFormData({
-            name: "",
-            email: "",
-            message: "",
-        });
+
+        axios
+            .post("/contact", formData)
+            .then((response) => {
+                console.log("Form submitted successfully!", response.data);
+                Swal.fire({
+                    icon: "success",
+                    title: "Pesan Terkirim!",
+                    text:
+                        response.data.message || "Pesan Anda berhasil dikirim.",
+                });
+                setFormData({
+                    name: "",
+                    email: "",
+                    message: "",
+                });
+            })
+            .catch((error) => {
+                console.error("There was an error submitting the form!", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text:
+                        error.response.data.message ||
+                        "Terjadi kesalahan saat mengirim pesan.",
+                });
+            });
     };
 
     return (
         <GuestLayout>
             <Head title="Contact Us" />
 
-            {/* Hero Section */}
-            <section className="bg-brown text-white py-20 text-center">
-                <div className="container mx-auto px-6">
-                    <h1 className="text-4xl font-bold mb-4">Hubungi Kami</h1>
-                    <p className="text-lg sm:text-xl mb-6">
+            <section className="py-20 text-center text-white bg-brown">
+                <div className="container px-6 mx-auto">
+                    <h1 className="mb-4 text-4xl font-bold">Hubungi Kami</h1>
+                    <p className="mb-6 text-lg sm:text-xl">
                         Kami siap membantu Anda! Kirimkan pesan atau hubungi
                         kami melalui informasi di bawah.
                     </p>
                 </div>
             </section>
 
-            {/* Contact Form Section */}
             <section className="py-16 bg-cream">
-                <div className="container mx-auto px-6">
-                    <h2 className="text-3xl font-semibold text-center text-brown mb-12">
+                <div className="container px-6 mx-auto">
+                    <h2 className="mb-12 text-3xl font-semibold text-center text-brown">
                         Formulir Kontak
                     </h2>
-                    <div className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+                    <div className="max-w-4xl p-8 mx-auto bg-white rounded-lg shadow-lg">
                         <form onSubmit={handleSubmit}>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
-                                {/* Nama */}
+                            <div className="grid grid-cols-1 gap-6 mb-6 sm:grid-cols-2">
                                 <div>
                                     <label
                                         htmlFor="name"
-                                        className="block text-sm font-semibold text-gray-700 mb-2"
+                                        className="block mb-2 text-sm font-semibold text-gray-700"
                                     >
                                         Nama
                                     </label>
@@ -70,11 +89,10 @@ const ContactPage = () => {
                                     />
                                 </div>
 
-                                {/* Email */}
                                 <div>
                                     <label
                                         htmlFor="email"
-                                        className="block text-sm font-semibold text-gray-700 mb-2"
+                                        className="block mb-2 text-sm font-semibold text-gray-700"
                                     >
                                         Email
                                     </label>
@@ -90,11 +108,10 @@ const ContactPage = () => {
                                 </div>
                             </div>
 
-                            {/* Pesan */}
                             <div className="mb-6">
                                 <label
                                     htmlFor="message"
-                                    className="block text-sm font-semibold text-gray-700 mb-2"
+                                    className="block mb-2 text-sm font-semibold text-gray-700"
                                 >
                                     Pesan
                                 </label>
@@ -111,7 +128,7 @@ const ContactPage = () => {
 
                             <button
                                 type="submit"
-                                className="w-full bg-brown text-white py-2 rounded-md text-lg font-semibold hover:bg-brown-dark focus:outline-none focus:ring-2 focus:ring-brown focus:ring-offset-2 transition duration-300"
+                                className="w-full py-2 text-lg font-semibold text-white transition duration-300 rounded-md bg-brown hover:bg-brown-dark focus:outline-none focus:ring-2 focus:ring-brown focus:ring-offset-2"
                             >
                                 Kirim Pesan
                             </button>
@@ -120,16 +137,15 @@ const ContactPage = () => {
                 </div>
             </section>
 
-            {/* Contact Info Section */}
             <section className="py-16 bg-gray-100">
-                <div className="container mx-auto px-6 text-center">
-                    <h2 className="text-3xl font-semibold text-brown mb-8">
+                <div className="container px-6 mx-auto text-center">
+                    <h2 className="mb-8 text-3xl font-semibold text-brown">
                         Informasi Kontak
                     </h2>
                     <div className="flex justify-center space-x-16">
                         {/* Alamat */}
                         <div className="text-gray-800">
-                            <h3 className="font-semibold text-lg text-brown mb-4">
+                            <h3 className="mb-4 text-lg font-semibold text-brown">
                                 Alamat
                             </h3>
                             <p>Jalan Barbershop No.1, Jakarta, Indonesia</p>
@@ -137,7 +153,7 @@ const ContactPage = () => {
 
                         {/* Telepon */}
                         <div className="text-gray-800">
-                            <h3 className="font-semibold text-lg text-brown mb-4">
+                            <h3 className="mb-4 text-lg font-semibold text-brown">
                                 Telepon
                             </h3>
                             <p>+62 123 456 789</p>
@@ -145,7 +161,7 @@ const ContactPage = () => {
 
                         {/* Email */}
                         <div className="text-gray-800">
-                            <h3 className="font-semibold text-lg text-brown mb-4">
+                            <h3 className="mb-4 text-lg font-semibold text-brown">
                                 Email
                             </h3>
                             <p>info@barbershop.com</p>
@@ -156,8 +172,8 @@ const ContactPage = () => {
 
             {/* Google Maps Embed */}
             <section className="py-16 bg-brown">
-                <div className="container mx-auto px-6">
-                    <h2 className="text-3xl font-semibold text-center text-white mb-8">
+                <div className="container px-6 mx-auto">
+                    <h2 className="mb-8 text-3xl font-semibold text-center text-white">
                         Temukan Kami
                     </h2>
                     <div className="w-full h-80 sm:h-96">

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ContentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CustomerController;
@@ -24,6 +25,9 @@ Route::get('/service', function () {
 Route::get('/contact', function () {
     return Inertia::render('Contact');
 })->name('contact');
+
+
+Route::post('/contact', [ContactController::class, 'sendEmail'])->name('contact.send');
 
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
