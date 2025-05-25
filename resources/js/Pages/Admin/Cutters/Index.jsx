@@ -9,6 +9,7 @@ const CutterIndex = ({ cutters: initialCutters }) => {
     const [cutters, setCutters] = useState(initialCutters);
     const { delete: destroy } = useForm();
 
+    console.log("CUTTERS", cutters);
     const deleteCutter = (cutterId) => {
         Swal.fire({
             title: "Apakah Anda yakin?",

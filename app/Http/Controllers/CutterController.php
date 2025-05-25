@@ -89,17 +89,8 @@ class CutterController extends Controller
                 'size' => $file->getSize()
             ]);
 
-            // Hapus gambar lama jika ada
-            if ($cutter->image) {
-                Storage::disk('public')->delete($cutter->image);
-            }
-
-            // Simpan gambar baru
-            $imageName = 'cutters/' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-            $data['image'] = str_replace('public/', '', $imageName);
-
-            Log::info('New Image Saved', ['path' => $data['image']]);
+            Storage::disk('public')->delete($cutter->image);
+            $data['image'] = $request->file('image')->store('cutters', 'public');
         }
 
         $cutter->update($data);
