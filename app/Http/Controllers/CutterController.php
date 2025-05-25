@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Cutter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class CutterController extends Controller
@@ -64,6 +65,12 @@ class CutterController extends Controller
      */
     public function update(Request $request, Cutter $cutter)
     {
+        // Log semua data yang diterima
+        Log::info('Update Cutter Request', [
+            'request_data' => $request->all(),
+            'has_file' => $request->hasFile('image')
+        ]);
+
         $request->validate([
             'name' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -71,16 +78,39 @@ class CutterController extends Controller
 
         $data = $request->only('name');
 
+        // Proses upload gambar
         if ($request->hasFile('image')) {
+            $file = $request->file('image');
+
+            // Log detail file
+            Log::info('Uploaded File Details', [
+                'original_name' => $file->getClientOriginalName(),
+                'mime_type' => $file->getMimeType(),
+                'size' => $file->getSize()
+            ]);
+
+            // Hapus gambar lama jika ada
             if ($cutter->image) {
                 Storage::disk('public')->delete($cutter->image);
             }
-            $data['image'] = $request->file('image')->store('cutters', 'public');
+
+            // Simpan gambar baru
+            $imageName = 'cutters/' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+            $data['image'] = str_replace('public/', '', $imageName);
+
+            Log::info('New Image Saved', ['path' => $data['image']]);
         }
 
         $cutter->update($data);
 
-        return redirect()->route('cutters.index')->with('success', 'Cutter berhasil diperbarui.');
+        Log::info('Cutter Updated', [
+            'id' => $cutter->id,
+            'name' => $cutter->name,
+            'image' => $cutter->image
+        ]);
+
+        return redirect()->route('cutters.index')->with('success', 'Cutter berhasil di update.');
     }
 
     /**

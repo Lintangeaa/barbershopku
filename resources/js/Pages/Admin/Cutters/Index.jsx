@@ -23,11 +23,21 @@ const CutterIndex = ({ cutters: initialCutters }) => {
             if (result.isConfirmed) {
                 destroy(route("cutters.destroy", cutterId), {
                     onSuccess: () => {
-                        Swal.fire("Berhasil!", "Cutter berhasil dihapus!", "success");
-                        setCutters((prev) => prev.filter((c) => c.id !== cutterId));
+                        Swal.fire(
+                            "Berhasil!",
+                            "Cutter berhasil dihapus!",
+                            "success"
+                        );
+                        setCutters((prev) =>
+                            prev.filter((c) => c.id !== cutterId)
+                        );
                     },
                     onError: () => {
-                        Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus cutter.", "error");
+                        Swal.fire(
+                            "Gagal!",
+                            "Terjadi kesalahan saat menghapus cutter.",
+                            "error"
+                        );
                     },
                 });
             }
@@ -39,18 +49,23 @@ const CutterIndex = ({ cutters: initialCutters }) => {
             <Head title="Daftar Cutter" />
 
             <div className="px-8 py-10">
-                <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
+                <h1 className="mb-8 text-3xl font-bold text-center text-gray-800">
                     Daftar Cutter
                 </h1>
 
                 <div className="flex justify-end mb-4">
-                    <RedirectButton className="bg-brown" href={route("cutters.create")}>Tambah Cutter</RedirectButton>
+                    <RedirectButton
+                        className="bg-brown"
+                        href={route("cutters.create")}
+                    >
+                        Tambah Cutter
+                    </RedirectButton>
                 </div>
 
-                <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6">
+                <div className="p-6 overflow-x-auto bg-white rounded-lg shadow-md">
                     <table className="w-full border-collapse">
                         <thead>
-                            <tr className="bg-gray-200 text-gray-700">
+                            <tr className="text-gray-700 bg-gray-200">
                                 <th className="p-3 text-left border">Nama</th>
                                 <th className="p-3 text-left border">Gambar</th>
                                 <th className="p-3 text-center border">Aksi</th>
@@ -62,18 +77,30 @@ const CutterIndex = ({ cutters: initialCutters }) => {
                                     <td className="p-3">{cutter.name}</td>
                                     <td className="p-3">
                                         {cutter.image && (
-                                            <img src={`/storage/${cutter.image}`} alt={cutter.name} className="h-12" />
+                                            <img
+                                                src={`/storage/${cutter.image}`}
+                                                alt={cutter.name}
+                                                className="h-12"
+                                            />
                                         )}
                                     </td>
                                     <td className="p-3 text-center">
-                                        <div className="flex justify-center items-center space-x-2">
-                                            <Link href={route("cutters.edit", cutter.id)} className="text-yellow-500 hover:text-yellow-700">
+                                        <div className="flex items-center justify-center space-x-2">
+                                            <Link
+                                                href={route(
+                                                    "cutters.edit",
+                                                    cutter.id
+                                                )}
+                                                className="text-yellow-500 hover:text-yellow-700"
+                                            >
                                                 <RiEdit2Line size={20} />
                                             </Link>
                                             <RiDeleteBin2Line
-                                                className="text-red-500 hover:text-red-700 cursor-pointer"
+                                                className="text-red-500 cursor-pointer hover:text-red-700"
                                                 size={20}
-                                                onClick={() => deleteCutter(cutter.id)}
+                                                onClick={() =>
+                                                    deleteCutter(cutter.id)
+                                                }
                                             />
                                         </div>
                                     </td>

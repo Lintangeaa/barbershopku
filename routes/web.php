@@ -49,7 +49,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/payment/confirm/{id}', [BookingController::class, 'confirmPayment'])->name('payment.confirm');
     Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
-    Route::resource('cutters', CutterController::class);
+    Route::get('/cutters', [CutterController::class, 'index'])->name('cutters.index');
+    Route::get('/cutters/create', [CutterController::class, 'create'])->name('cutters.create');
+    Route::post('/cutters', [CutterController::class, 'store'])->name('cutters.store');
+    Route::get('/cutters/{cutter}/edit', [CutterController::class, 'edit'])->name('cutters.edit');
+    Route::put('/cutters/{cutter}', [CutterController::class, 'update'])->name('cutters.update');
+    Route::delete('/cutters/{cutter}', [CutterController::class, 'destroy'])->name('cutters.destroy');
+
     Route::resource('services', ServiceController::class);
 });
 

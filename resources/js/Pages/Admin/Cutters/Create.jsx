@@ -17,37 +17,63 @@ export default function Create() {
     return (
         <AuthenticatedLayout>
             <Head title="Tambah Cutter" />
-            <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-8">
-                <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
+            <div className="max-w-2xl p-6 mx-auto mt-8 bg-white rounded-lg shadow-md">
+                <h1 className="mb-8 text-3xl font-bold text-center text-gray-800">
                     Tambah Cutter
                 </h1>
-                <form onSubmit={handleSubmit} className="bg-white p-6 space-y-6">
+                <form
+                    onSubmit={handleSubmit}
+                    className="p-6 space-y-6 bg-white"
+                >
                     <div className="flex justify-start">
-                      <RedirectButton className="bg-brown" href={route('cutters.index')}>Kembali</RedirectButton>
+                        <RedirectButton
+                            className="bg-brown"
+                            href={route("cutters.index")}
+                        >
+                            Kembali
+                        </RedirectButton>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Nama Cutter</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Nama Cutter
+                        </label>
                         <input
                             type="text"
                             value={data.name}
                             onChange={(e) => setData("name", e.target.value)}
-                            className="mt-1 block w-full px-4 py-2 border rounded-md"
+                            className="block w-full px-4 py-2 mt-1 border rounded-md"
                         />
-                        {errors.name && <div className="text-red-600 text-sm mt-1">{errors.name}</div>}
+                        {errors.name && (
+                            <div className="mt-1 text-sm text-red-600">
+                                {errors.name}
+                            </div>
+                        )}
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Gambar</label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Gambar
+                        </label>
                         <input
                             type="file"
-                            onChange={(e) => setData("image", e.target.files[0])}
-                            className="mt-1 block w-full px-4 py-2 border rounded-md"
+                            onChange={(e) =>
+                                setData("image", e.target.files[0])
+                            }
+                            className="block w-full px-4 py-2 mt-1 border rounded-md"
                         />
-                        {errors.image && <div className="text-red-600 text-sm mt-1">{errors.image}</div>}
+                        {errors.image && (
+                            <div className="mt-1 text-sm text-red-600">
+                                {errors.image}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="flex justify-end">    
-                        <PrimaryButton className="bg-brown" type="submit" disabled={processing}>
+                    <div className="flex justify-end">
+                        <PrimaryButton
+                            className="bg-brown"
+                            type="submit"
+                            disabled={processing}
+                        >
                             {processing ? "Memproses..." : "Tambah Cutter"}
                         </PrimaryButton>
                     </div>
