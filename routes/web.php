@@ -56,7 +56,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/cutters/{cutter}', [CutterController::class, 'update'])->name('cutters.update');
     Route::delete('/cutters/{cutter}', [CutterController::class, 'destroy'])->name('cutters.destroy');
 
-    Route::resource('services', ServiceController::class);
+    Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+    Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
+    Route::post('/services', [ServiceController::class, 'store'])->name('services.store');
+    Route::get('/services/{service}/edit', [ServiceController::class, 'edit'])->name('services.edit');
+    Route::put('/services/{service}', [ServiceController::class, 'update'])->name('services.update');
+    Route::delete('/services/{service}', [ServiceController::class, 'destroy'])->name('services.destroy');
 });
 
 require __DIR__ . '/auth.php';
