@@ -10,18 +10,19 @@ use App\Models\Service;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BookingController extends Controller
 {
     public function index()
     {
-        $bookings = Booking::with(['service', 'schedule', 'cutter', 'paymentProof'])->orderBy('date', 'asc')->get(); 
-    
+        $bookings = Booking::with(['service', 'schedule', 'cutter', 'paymentProof'])->orderBy('date', 'asc')->get();
+
         return Inertia::render('Admin/Booking/Index', [
             'bookings' => $bookings,
         ]);
     }
-    
+
 
     public function create()
     {
@@ -59,23 +60,23 @@ class BookingController extends Controller
                 'cutter_id' => $request->cutter_id,
                 'status' => 1,
             ]);
-        
+
             // Update schedule status
             $schedule = Schedule::find($request->schedule_id);
             $service = Service::find($request->service_id);
-        
+
             if ($schedule && $service) {
                 Log::info('Schedule Found:', ['schedule_id' => $schedule->id, 'status' => $schedule->status]);
-        
+
                 $schedule->status = true;
                 $schedule->save();
             } else {
                 Log::warning('Schedule Not Found:', ['schedule_id' => $request->schedule_id]);
             }
-        
+
             // Generate payment link
             $paymentLink = "https://barbershopku.online/payment/{$booking->id}";
-        
+
             // Send email
             $client = new Client();
             $response = $client->post('http://103.87.67.71:7001/email/send', [
@@ -87,16 +88,16 @@ class BookingController extends Controller
                     'text' => "Halo {$request->customer_name},\n\nBooking Anda telah diterima. Terima kasih telah memilih layanan {$service->name}. Pada tanggal {$request->date} jam {$schedule->time_range}.\n\nSilakan lakukan pembayaran melalui tautan berikut:\n{$paymentLink}\n\nMohon lakukan pembayaran dalam waktu 2 jam. Jika pembayaran tidak diterima dalam waktu tersebut, booking Anda akan dibatalkan secara otomatis."
                 ]
             ]);
-        
+
             Log::info('Email API Response:', ['response' => $response->getBody()->getContents()]);
-        
+
             session()->flash('success', 'Booking berhasil!');
         } catch (\Exception $e) {
             Log::error('Booking Error: ' . $e->getMessage());
             session()->flash('error', 'Terjadi kesalahan saat menyimpan booking.');
-        
+
             return back();
-        }        
+        }
     }
 
     public function confirmPayment($bookingId)
@@ -140,5 +141,82 @@ class BookingController extends Controller
         $booking->delete();
 
         return redirect()->route('booking.index');
+    }
+
+    /**
+     * Generate laporan PDF booking
+     */
+    public function printReport(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Booking::with(['service', 'schedule', 'cutter', 'paymentProof']);
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        $bookings = $query->orderBy('date', 'asc')->get();
+
+        // Calculate totals
+        $totalBookings = $bookings->count();
+        $totalRevenue = $bookings->where('status', 2)->sum(function($booking) {
+            return $booking->service->price ?? 0;
+        });
+
+        return Inertia::render('Admin/Booking/Report', [
+            'bookings' => $bookings,
+            'totalBookings' => $totalBookings,
+            'totalRevenue' => $totalRevenue,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+    }
+
+    /**
+     * Download PDF laporan booking
+     */
+    public function downloadPDF(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $query = Booking::with(['service', 'schedule', 'cutter', 'paymentProof']);
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('date', [$startDate, $endDate]);
+        }
+
+        $bookings = $query->orderBy('date', 'asc')->get();
+
+        // Calculate totals
+        $totalBookings = $bookings->count();
+        $totalRevenue = $bookings->where('status', 2)->sum(function($booking) {
+            return $booking->service->price ?? 0;
+        });
+
+        // Generate filename
+        $filename = 'laporan-booking';
+        if ($startDate && $endDate) {
+            $filename .= '-' . $startDate . '-sampai-' . $endDate;
+        } else {
+            $filename .= '-semua-data';
+        }
+        $filename .= '.pdf';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('reports.booking-report', [
+            'bookings' => $bookings,
+            'totalBookings' => $totalBookings,
+            'totalRevenue' => $totalRevenue,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
+
+        // Set paper size and orientation
+        $pdf->setPaper('A4', 'portrait');
+
+        return $pdf->download($filename);
     }
 }

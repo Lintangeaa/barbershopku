@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Head, Link, useForm } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { RiDeleteBin2Line, RiEdit2Line } from "react-icons/ri";
+import { RiDeleteBin2Line, RiEdit2Line, RiFileTextLine } from "react-icons/ri";
 import { MdPreview } from "react-icons/md";
 import Modal from "@/Components/Modal";
 import Swal from "sweetalert2";
@@ -90,9 +90,18 @@ const BookingIndex = ({ bookings: initialBookings }) => {
             <Head title="Daftar Booking" />
 
             <div className="px-8 py-10">
-                <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">
-                    Daftar Booking
-                </h1>
+                <div className="flex items-center justify-between mb-8">
+                    <h1 className="text-3xl font-bold text-gray-800">
+                        Daftar Booking
+                    </h1>
+                    <Link
+                        href={route("booking.report")}
+                        className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                    >
+                        <RiFileTextLine size={20} className="mr-2" />
+                        Laporan
+                    </Link>
+                </div>
 
                 <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6">
                     <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">

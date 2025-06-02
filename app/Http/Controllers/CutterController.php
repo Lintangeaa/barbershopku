@@ -15,7 +15,7 @@ class CutterController extends Controller
      */
     public function index()
     {
-        $cutters = Cutter::all();
+        $cutters = Cutter::withTrashed()->get();
         return Inertia::render('Admin/Cutters/Index', [
             'cutters' => $cutters
         ]);
@@ -65,12 +65,6 @@ class CutterController extends Controller
      */
     public function update(Request $request, Cutter $cutter)
     {
-        // Log semua data yang diterima
-        Log::info('Update Cutter Request', [
-            'request_data' => $request->all(),
-            'has_file' => $request->hasFile('image')
-        ]);
-
         $request->validate([
             'name' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -78,42 +72,57 @@ class CutterController extends Controller
 
         $data = $request->only('name');
 
-        // Proses upload gambar
         if ($request->hasFile('image')) {
             $file = $request->file('image');
 
-            // Log detail file
-            Log::info('Uploaded File Details', [
-                'original_name' => $file->getClientOriginalName(),
-                'mime_type' => $file->getMimeType(),
-                'size' => $file->getSize()
-            ]);
+            if ($cutter->image) {
+                Storage::disk('public')->delete($cutter->image);
+            }
 
-            Storage::disk('public')->delete($cutter->image);
-            $data['image'] = $request->file('image')->store('cutters', 'public');
+            $imageName = 'cutters/' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $imagePath = $file->storeAs('public', $imageName);
+            $data['image'] = str_replace('public/', '', $imageName);
         }
 
         $cutter->update($data);
 
-        Log::info('Cutter Updated', [
-            'id' => $cutter->id,
-            'name' => $cutter->name,
-            'image' => $cutter->image
-        ]);
-
-        return redirect()->route('cutters.index')->with('success', 'Cutter berhasil di update.');
+        return redirect()->route('cutters.index')->with('success', 'Cutter berhasil diperbarui.');
     }
 
     /**
-     * Hapus cutter dari database.
+     * Soft delete cutter dari database.
      */
     public function destroy(Cutter $cutter)
     {
-        if ($cutter->image) {
-            Storage::disk('public')->delete($cutter->image);
-        }
         $cutter->delete();
 
         return redirect()->route('cutters.index')->with('success', 'Cutter berhasil dihapus.');
+    }
+
+    /**
+     * Restore cutter yang sudah dihapus.
+     */
+    public function restore($id)
+    {
+        $cutter = Cutter::withTrashed()->findOrFail($id);
+        $cutter->restore();
+
+        return redirect()->route('cutters.index')->with('success', 'Cutter berhasil dipulihkan.');
+    }
+
+    /**
+     * Hapus permanen cutter.
+     */
+    public function forceDelete($id)
+    {
+        $cutter = Cutter::withTrashed()->findOrFail($id);
+
+        if ($cutter->image) {
+            Storage::disk('public')->delete($cutter->image);
+        }
+
+        $cutter->forceDelete();
+
+        return redirect()->route('cutters.index')->with('success', 'Cutter berhasil dihapus permanen.');
     }
 }

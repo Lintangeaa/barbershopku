@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/booking', [BookingController::class, 'index'])->name('booking.index');
+    Route::get('/booking/report', [BookingController::class, 'printReport'])->name('booking.report');
+    Route::get('/booking/download-pdf', [BookingController::class, 'downloadPDF'])->name('booking.download-pdf');
     Route::patch('/payment/confirm/{id}', [BookingController::class, 'confirmPayment'])->name('payment.confirm');
     Route::delete('/booking/{id}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
@@ -55,6 +57,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/cutters/{cutter}/edit', [CutterController::class, 'edit'])->name('cutters.edit');
     Route::put('/cutters/{cutter}', [CutterController::class, 'update'])->name('cutters.update');
     Route::delete('/cutters/{cutter}', [CutterController::class, 'destroy'])->name('cutters.destroy');
+    Route::patch('/cutters/{id}/restore', [CutterController::class, 'restore'])->name('cutters.restore');
+    Route::delete('/cutters/{id}/force-delete', [CutterController::class, 'forceDelete'])->name('cutters.force-delete');
 
     Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('/services/create', [ServiceController::class, 'create'])->name('services.create');
