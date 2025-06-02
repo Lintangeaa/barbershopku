@@ -13,16 +13,16 @@ export default function GuestLayout({ header, children }) {
     return (
         <div className="min-h-screen ">
             <nav className="border-b bg-neutral-800">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="flex h-20 justify-between">
+                <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-20">
                         <div className="flex w-full">
-                            <div className="flex w-1/3  shrink-0 items-center">
+                            <div className="flex items-center w-1/3 shrink-0">
                                 <Link href="/">
-                                    <ApplicationLogo className="block h-9 w-auto fill-current text-white" />
+                                    <ApplicationLogo className="block w-auto text-white fill-current h-9" />
                                 </Link>
                             </div>
 
-                            <div className="w-2/3 hidden space-x-8 sm:-my-px sm:ms-10 sm:flex sm:justify-end">
+                            <div className="hidden w-2/3 space-x-8 sm:-my-px sm:ms-10 sm:flex sm:justify-end">
                                 <NavLink
                                     href={route("home")}
                                     active={route().current("home")}
@@ -47,7 +47,7 @@ export default function GuestLayout({ header, children }) {
                                 >
                                     Contact
                                 </NavLink>
-                                <div className="flex justify-center items-center p-2">
+                                <div className="flex items-center justify-center p-2">
                                     <RedirectButton
                                         href={route("booking.create")}
                                         className=" bg-brown"
@@ -58,17 +58,17 @@ export default function GuestLayout({ header, children }) {
                             </div>
                         </div>
 
-                        <div className="-me-2 flex items-center sm:hidden">
+                        <div className="flex items-center -me-2 sm:hidden">
                             <button
                                 onClick={() =>
                                     setShowingNavigationDropdown(
                                         (previousState) => !previousState
                                     )
                                 }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                className="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
                             >
                                 <svg
-                                    className="h-6 w-6"
+                                    className="w-6 h-6"
                                     stroke="currentColor"
                                     fill="none"
                                     viewBox="0 0 24 24"
@@ -107,20 +107,46 @@ export default function GuestLayout({ header, children }) {
                         " sm:hidden"
                     }
                 >
-                    <div className="space-y-1 pb-3 pt-2">
+                    <div className="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
-                            href={route("dashboard")}
-                            active={route().current("dashboard")}
+                            href={route("home")}
+                            active={route().current("home")}
                         >
-                            Dashboard
+                            Home
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("about")}
+                            active={route().current("about")}
+                        >
+                            About
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("service")}
+                            active={route().current("service")}
+                        >
+                            Service
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route("contact")}
+                            active={route().current("contact")}
+                        >
+                            Contact
+                        </ResponsiveNavLink>
+                        <div className="px-4 py-2">
+                            <RedirectButton
+                                href={route("booking.create")}
+                                className="w-full bg-brown"
+                            >
+                                BOOKING
+                            </RedirectButton>
+                        </div>
                     </div>
                 </div>
             </nav>
 
             {header && (
                 <header className="bg-white shadow">
-                    <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                    <div className="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
                         {header}
                     </div>
                 </header>
