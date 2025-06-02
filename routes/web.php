@@ -14,13 +14,9 @@ use Inertia\Inertia;
 
 Route::get('/', [ContentController::class, 'home'])->name('home');
 
-Route::get('/about', function () {
-    return Inertia::render('About');
-})->name('about');
+Route::get('/about', [ContentController::class, 'about'])->name('about');
 
-Route::get('/service', function () {
-    return Inertia::render('Service');
-})->name('service');
+Route::get('/service', [ContentController::class, 'service'])->name('service');
 
 Route::get('/contact', function () {
     return Inertia::render('Contact');

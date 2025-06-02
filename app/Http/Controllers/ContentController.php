@@ -22,4 +22,22 @@ class ContentController extends Controller
             'services' => $services
         ]);
     }
+
+    public function about()
+    {
+        $cutters = Cutter::all();
+
+        return Inertia::render('About', [
+            'cutters' => $cutters
+        ]);
+    }
+
+    public function service()
+    {
+        $services = Service::all();
+
+        return Inertia::render('Service', [
+            'services' => $services
+        ]);
+    }
 }
